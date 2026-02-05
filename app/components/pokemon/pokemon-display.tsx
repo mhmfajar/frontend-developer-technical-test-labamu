@@ -151,7 +151,7 @@ export function PokemonDisplay({
             onLoadMore={loadMore}
             isLoading={isLoading}
             itemHeight={255.5}
-            minItemWidth={160}
+            itemWidth={160}
             gap={{ mobile: 16, tablet: 12, desktop: 12 }}
           />
         ) : !isLoading ? (
