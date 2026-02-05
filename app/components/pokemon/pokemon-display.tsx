@@ -12,8 +12,7 @@ import {
   type SortOption,
 } from "~/app/components/ui/sort-dropdown";
 import { VirtualizedGrid } from "~/app/components/ui/virtualized-grid";
-import type { PokemonList } from "~/app/types/pokemon";
-import type { Pokemon } from "~/lib/types";
+import type { PokemonList, PokemonProps } from "~/app/types/pokemon";
 import { PokemonCard } from "./pokemon-card";
 
 export function PokemonDisplay({
@@ -30,10 +29,10 @@ export function PokemonDisplay({
   const [searchQuery, setSearchQuery] = useState(searchParams.get("q") || "");
   const sortBy = (searchParams.get("sort") as SortOption) || "id";
 
-  const initialPokemon: Pokemon[] = data.result;
+  const initialPokemon: PokemonProps[] = data.result;
   const initialHasMore = data.next !== null;
 
-  const [pokemon, setPokemon] = useState<Pokemon[]>(initialPokemon);
+  const [pokemon, setPokemon] = useState<PokemonProps[]>(initialPokemon);
   const [hasMore, setHasMore] = useState(initialHasMore);
   const [isLoading, setIsLoading] = useState(false);
 

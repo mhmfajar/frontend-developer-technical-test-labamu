@@ -1,9 +1,13 @@
 import Image from "next/image";
+import Link from "next/link";
 import type { PokemonProps } from "../../types/pokemon";
 
 export function PokemonCard({ pokemon }: { pokemon: PokemonProps }) {
   return (
-    <div className="group relative overflow-hidden rounded-3xl bg-white shadow-md transition-all border border-gray-300 flex flex-col cursor-pointer">
+    <Link
+      href={`/pokemon/${pokemon.id}`}
+      className="group relative overflow-hidden rounded-3xl bg-white shadow-md transition-all border border-gray-300 flex flex-col cursor-pointer"
+    >
       <div className="relative p-4 flex flex-col flex-1">
         <div className="mb-1 text-right">
           <span className="text-xs font-bold text-zinc-400">
@@ -27,6 +31,6 @@ export function PokemonCard({ pokemon }: { pokemon: PokemonProps }) {
           {pokemon.name}
         </h3>
       </div>
-    </div>
+    </Link>
   );
 }
