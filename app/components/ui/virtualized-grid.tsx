@@ -169,9 +169,8 @@ export function VirtualizedGrid<T>({
     >
       <div style={{ height: totalHeight }} className="relative w-full">
         {visibleItems}
+        {isLoading && (loadingIndicator || defaultLoadingIndicator)}
       </div>
-
-      {isLoading && (loadingIndicator || defaultLoadingIndicator)}
     </div>
   );
 }
