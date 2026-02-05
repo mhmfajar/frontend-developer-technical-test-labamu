@@ -213,7 +213,7 @@ export default async function PokemonDetailPage({ params }: PageProps) {
                     <div key={evo.id} className="flex items-center">
                       <Link
                         href={`/pokemon/${evo.id}`}
-                        className={`group flex flex-col items-center p-3 rounded-2xl transition-all hover:bg-zinc-50 ${
+                        className={`group flex flex-col items-center p-1 rounded-2xl transition-all hover:bg-zinc-50 ${
                           evo.id === pokemon.id
                             ? "bg-zinc-100 ring-2 ring-offset-2"
                             : ""

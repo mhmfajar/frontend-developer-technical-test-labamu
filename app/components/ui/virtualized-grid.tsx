@@ -7,8 +7,8 @@ export interface VirtualizedGridProps<T> {
   renderItem: (item: T, index: number) => React.ReactNode;
   keyExtractor: (item: T, index: number) => string | number;
   itemHeight?: number;
+  itemWidth?: number;
   buffer?: number;
-  minItemWidth?: number;
   gap?: number | { mobile?: number; tablet?: number; desktop?: number };
   hasMore?: boolean;
   onLoadMore?: () => void | Promise<void>;
@@ -24,8 +24,8 @@ export function VirtualizedGrid<T>({
   renderItem,
   keyExtractor,
   itemHeight = 256,
+  itemWidth = 180,
   buffer = 2,
-  minItemWidth = 180,
   gap = 16,
   hasMore = false,
   onLoadMore,
@@ -61,7 +61,7 @@ export function VirtualizedGrid<T>({
 
         const paddingOffset = 32;
         const containerWidth = containerRef.current.clientWidth - paddingOffset;
-        const cols = Math.max(1, Math.floor(containerWidth / minItemWidth));
+        const cols = Math.max(1, Math.floor(containerWidth / itemWidth));
         setColumnCount(cols);
         setContainerHeight(containerRef.current.clientHeight);
       }
@@ -70,7 +70,7 @@ export function VirtualizedGrid<T>({
     updateLayout();
     window.addEventListener("resize", updateLayout);
     return () => window.removeEventListener("resize", updateLayout);
-  }, [minItemWidth, gap]);
+  }, [itemWidth, gap]);
 
   const handleScroll = useCallback(
     (e: React.UIEvent<HTMLDivElement>) => {

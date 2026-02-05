@@ -12,19 +12,30 @@ export async function fetchListPokemon(
   try {
     const listPokemon = await api.pokemon.listPokemons(offset, limit);
 
-    return {
-      count: listPokemon.count,
-      next: listPokemon.next,
-      previous: listPokemon.previous,
-      result: listPokemon.results.map((item) => {
+    const result = await Promise.all(
+      listPokemon.results.map(async (item) => {
         const id = Number(item.url.split("/")[6]);
+        const dreamWorldUrl = `https://raw.githubusercontent.com/pokeapi/sprites/master/sprites/pokemon/other/dream-world/${id}.svg`;
+
+        const response = await fetch(dreamWorldUrl, { method: "HEAD" }).catch(
+          () => null,
+        );
 
         return {
           id,
           name: item.name,
-          image: `https://raw.githubusercontent.com/pokeapi/sprites/master/sprites/pokemon/other/dream-world/${id}.svg`,
+          image: response?.ok
+            ? dreamWorldUrl
+            : `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`,
         };
       }),
+    );
+
+    return {
+      count: listPokemon.count,
+      next: listPokemon.next,
+      previous: listPokemon.previous,
+      result,
     };
   } catch (error) {
     console.error("Error fetching pokemon:", error);
@@ -52,25 +63,35 @@ export async function fetchPokemonById(id: number | string) {
       Number(evolutionChainId),
     );
 
-    const evolutionChain: { id: number; name: string; image: string }[] = [];
-    const currentStep = evolutionData.chain;
-
-    const getPokemonData = (step: ChainLink): void => {
+    const getPokemonData = async (
+      step: ChainLink,
+    ): Promise<{ id: number; name: string; image: string }[]> => {
       const id = Number(step.species.url.split("/").filter(Boolean).pop());
-      evolutionChain.push({
+      const dreamWorldUrl = `https://raw.githubusercontent.com/pokeapi/sprites/master/sprites/pokemon/other/dream-world/${id}.svg`;
+
+      const response = await fetch(dreamWorldUrl, { method: "HEAD" }).catch(
+        () => null,
+      );
+
+      const current = {
         id,
         name: step.species.name,
-        image: `https://raw.githubusercontent.com/pokeapi/sprites/master/sprites/pokemon/other/dream-world/${id}.svg`,
-      });
+        image: response?.ok
+          ? dreamWorldUrl
+          : `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`,
+      };
 
       if (step.evolves_to.length > 0) {
-        for (const nextStep of step.evolves_to) {
-          getPokemonData(nextStep);
-        }
+        const nextSteps = await Promise.all(
+          step.evolves_to.map((nextStep) => getPokemonData(nextStep)),
+        );
+        return [current, ...nextSteps.flat()];
       }
+
+      return [current];
     };
 
-    getPokemonData(currentStep);
+    const evolutionChain = await getPokemonData(evolutionData.chain);
 
     return {
       id: pokemon.id,
