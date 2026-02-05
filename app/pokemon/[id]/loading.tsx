@@ -62,16 +62,15 @@ export default function Loading() {
 
             <div className="flex flex-col gap-4 mt-2">
               <div className="mx-auto h-6 w-32 bg-zinc-100 rounded mb-2" />
-              {Array.from({ length: 6 }).map((_, i) => (
-                <div
-                  key={`stat-skeleton-${i}`}
-                  className="flex items-center gap-3"
-                >
-                  <div className="w-10 h-3 bg-zinc-100 rounded" />
-                  <div className="w-8 h-3 bg-zinc-100 rounded" />
-                  <div className="flex-1 h-2 bg-zinc-50 rounded-full" />
-                </div>
-              ))}
+              {Array.from({ length: 6 }, (_, i) => `stat-skeleton-${i}`).map(
+                (key) => (
+                  <div key={key} className="flex items-center gap-3">
+                    <div className="w-10 h-3 bg-zinc-100 rounded" />
+                    <div className="w-8 h-3 bg-zinc-100 rounded" />
+                    <div className="flex-1 h-2 bg-zinc-50 rounded-full" />
+                  </div>
+                ),
+              )}
             </div>
           </div>
         </div>
